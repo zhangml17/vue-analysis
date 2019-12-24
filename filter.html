@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue 过滤器</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- checkbox自定义value值 -->
+        <div>
+            <input type="checkbox" v-model="toggle" v-bind:true-value="a" v-bind:false-value="b"   />
+            <span v-text="toggle"></span>
+        </div>
+        <!-- 全局和局部过滤器 -->
+        <div>
+            <!-- 插值 -->
+            <p>{{ 'Hello' | globalFilter }}</p>
+            <p>{{ 'Hello' | componentFilter }}</p>
+            <!-- v-bind中使用过滤器，div的data属性：Hello-World -->
+            <div v-bind:data=" 'Hello' | globalFilter" style="background: red;width:300px;height: 50px;">
+                查看我的data属性值
+            </div>
+        </div>
+
+        <!-- 过滤器传参 -->
+        <div>
+            <!--方式一：过滤器串联 {{ message | filterA | filterB }}
+                 '2018'作为第一个参数传给filterA，filterA的返回值作为第一个参数传给filterB -->
+            <p>{{ '2018' | filterA | filterB }}</p>
+            <!-- 方式二：{{ message | filterC(arg1, arg2) }} -->
+            <p>{{ '2018' | filterC('12', '24') }}</p>
+            <!-- 方式三：{{ msg1, msg2 | filterD }} -->
+            <p>{{ 'Hello', ' World' | filterD }}</p>
+        </div>
+    </div>
+
+    <script>
+        // 全局注册过滤器要在new Vue之前
+        Vue.filter('globalFilter', function(value) {
+            return value + '- World'
+        })
+        var vm = new Vue({
+            el:'#app',
+            data: {
+                a:'hello',
+                b:'world',
+                toggle: 'plz choose'
+            },
+            filters:{
+                componentFilter(value){
+                    return value + '- World'
+                },
+                filterA(value) {
+                    return value + '年'
+                },
+                filterB(value) {
+                    return value + 'Welcome!'
+                },
+                filterC(value, arg1, arg2) {
+                    return value + '-' + arg1 + '-' + arg2
+                },
+                filterD(val1, val2) {
+                    return val1 + '-' + val2
+                }
+            }
+        })
+
+    </script>
+</body>
+</html>
